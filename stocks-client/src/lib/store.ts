@@ -26,6 +26,13 @@ class Store {
   }
 
   public async getStocks() {
+    if (
+      this.lastFetchedStocks &&
+      Date.now() - this.lastFetchedStocks < 1000 * 60 * 10
+    ) {
+      return
+    }
+
     stockService.getStocks().then((data) => {
       if (data) {
         this.stocks = data

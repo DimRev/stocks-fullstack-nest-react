@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { authService } from '../auth/services/auth.service'
 import { observer } from 'mobx-react'
 import store from '../../lib/store'
+import { Button, Input } from 'antd'
 
 const RegisterSchema = z.object({
   email: z.string().email('Invalid email'),
@@ -56,13 +57,11 @@ function RegisterPage() {
 
   return (
     <div className="flex justify-center items-center px-4 h-full">
-      <div className="px-2 py-4 border rounded-md">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col items-center gap-4 w-lg">
-          <div className="flex gap-4">
+      <div className="px-2 py-4 border rounded-md w-[400px]">
+        <form onSubmit={handleSubmit} className="gap-4 w-lg">
+          <div className="grid grid-cols-[2fr_6fr] px-2 py-2">
             <label htmlFor="email">Email</label>
-            <input
+            <Input
               className="border"
               type="text"
               id="email"
@@ -71,9 +70,9 @@ function RegisterPage() {
               onChange={handleChange}
             />
           </div>
-          <div className="flex gap-4">
+          <div className="grid grid-cols-[2fr_6fr] px-2 py-2">
             <label htmlFor="email">Username</label>
-            <input
+            <Input
               className="border"
               type="text"
               id="username"
@@ -82,9 +81,9 @@ function RegisterPage() {
               onChange={handleChange}
             />
           </div>
-          <div className="flex gap-4">
+          <div className="grid grid-cols-[2fr_6fr] px-2 py-2">
             <label htmlFor="password">Password</label>
-            <input
+            <Input
               className="border"
               type="password"
               id="password"
@@ -100,7 +99,9 @@ function RegisterPage() {
               Login
             </Link>
           </p>
-          <button type="submit">Register</button>
+          <Button type="primary" htmlType="submit">
+            Register
+          </Button>
         </form>
       </div>
     </div>
