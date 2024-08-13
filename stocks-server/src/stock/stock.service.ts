@@ -62,7 +62,7 @@ export class StockService {
           timestamp: number;
         }[]
       >(`/v3/quote/${symbol}` + `?apikey=${STOCK_API_KEY}`);
-      return data;
+      return data[0];
     } catch (err) {
       console.error(err);
       if (err instanceof HttpException) throw err;

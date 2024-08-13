@@ -37,4 +37,13 @@ export class StockController {
     }
     return this.stockService.addStockToUserPortfolio(symbol, token);
   }
+
+  @Get(':symbol')
+  getStockDetails(@Param('symbol') symbol: string, @Req() request: any) {
+    const token = request.cookies?.jwt;
+    if (!token) {
+      throw new HttpException('Unauthorized', 401);
+    }
+    return this.stockService.getStockBySymbol(symbol, token);
+  }
 }

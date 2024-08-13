@@ -11,6 +11,7 @@ class Store {
   stocks: StockListItem[] = []
   lastFetchedStocks: number | null = null
   userStockSymbols: string[] = []
+  stockDetails: Record<string, [number, StockDetails]> = {}
 
   constructor() {
     makeAutoObservable(this)
@@ -33,7 +34,7 @@ class Store {
     })
   }
 
-  setUserStockSymbols(userStockSymbols: string[]) {
+  public setUserStockSymbols(userStockSymbols: string[]) {
     this.userStockSymbols = userStockSymbols
   }
 
@@ -43,6 +44,21 @@ class Store {
         this.userStockSymbols = data.stockSymbols
       }
     })
+  }
+
+  public async getStockDetails(symbol: string) {
+    if (
+      !this.stockDetails[symbol] ||
+      this.stockDetails[symbol][0] + 1000 * 60 * 10 < Date.now()
+    ) {
+      const data = await stockService.getStockDetails(symbol)
+      if (data) {
+        this.stockDetails[symbol] = [Date.now(), data]
+        return data
+      }
+    } else {
+      return this.stockDetails[symbol][1]
+    }
   }
 }
 
