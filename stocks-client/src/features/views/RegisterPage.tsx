@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { z } from 'zod'
+import { authService } from '../auth/services/auth.service'
 
 const RegisterSchema = z.object({
   email: z.string().email('Invalid email'),
@@ -28,18 +29,22 @@ function RegisterPage() {
     }))
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     try {
       const parsed = RegisterSchema.parse(formState)
-      console.log(parsed)
+      const data = await authService.register(parsed)
+      console.log(data)
     } catch (err) {
       if (err instanceof z.ZodError) {
         setError(err.errors[0].message)
         return
+      } else if (err instanceof Error) {
+        setError(err.message)
+        return
       }
+      console.log(formState)
     }
-    console.log(formState)
   }
 
   return (
