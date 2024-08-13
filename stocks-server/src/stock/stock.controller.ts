@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { StockService } from './stock.service';
 
 @Controller('stock')
@@ -8,5 +8,10 @@ export class StockController {
   @Get()
   getStocks() {
     return this.stockService.getStocks();
+  }
+
+  @Get(':symbol')
+  getStockBySymbol(@Param('symbol') symbol: string) {
+    return this.stockService.getStockBySymbol(symbol);
   }
 }

@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx'
+import { stockService } from '../features/stock/service/stock.service'
 
 export type MiniUser = {
   email: string
@@ -7,17 +8,28 @@ export type MiniUser = {
 
 class Store {
   miniUser: MiniUser | null = null
+  stocks: StockListItem[] = []
+  lastFetchedStocks: number | null = null
 
   constructor() {
     makeAutoObservable(this)
   }
 
-  setMiniUser(miniUser: MiniUser) {
+  public setMiniUser(miniUser: MiniUser) {
     this.miniUser = miniUser
   }
 
-  unsetMiniUser() {
+  public unsetMiniUser() {
     this.miniUser = null
+  }
+
+  public async getStocks() {
+    stockService.getStocks().then((data) => {
+      if (data) {
+        this.stocks = data
+        this.lastFetchedStocks = Date.now()
+      }
+    })
   }
 }
 
