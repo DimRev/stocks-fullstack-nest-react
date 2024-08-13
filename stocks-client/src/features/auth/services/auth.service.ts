@@ -19,6 +19,7 @@ async function register({ email, username, password }: RegisterProps) {
       .post<{
         email: string
         username: string
+        stockSymbols: string[]
       }>('/auth/register', {
         email,
         username,
@@ -47,6 +48,7 @@ async function login({ email, password }: LoginProps) {
       .post<{
         email: string
         username: string
+        stockSymbols: string[]
       }>('/auth/login', {
         email,
         password,

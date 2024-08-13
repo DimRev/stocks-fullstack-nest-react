@@ -10,6 +10,7 @@ class Store {
   miniUser: MiniUser | null = null
   stocks: StockListItem[] = []
   lastFetchedStocks: number | null = null
+  userStockSymbols: string[] = []
 
   constructor() {
     makeAutoObservable(this)
@@ -32,10 +33,14 @@ class Store {
     })
   }
 
+  setUserStockSymbols(userStockSymbols: string[]) {
+    this.userStockSymbols = userStockSymbols
+  }
+
   public async addStockToUserPortfolio(symbol: string) {
     stockService.addStockToUserPortfolio(symbol).then((data) => {
-      if (data) {
-        console.log(data)
+      if (data && this.miniUser) {
+        this.userStockSymbols = data.stockSymbols
       }
     })
   }

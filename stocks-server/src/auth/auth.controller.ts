@@ -14,7 +14,11 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 3600000, // 1 hour
     });
-    res.send({ username: result.username, email: result.email });
+    res.send({
+      username: result.username,
+      email: result.email,
+      stockSymbols: result.stockSymbols,
+    });
   }
 
   @Post('register')
@@ -26,7 +30,11 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 3600000, // 1 hour
     });
-    res.send({ username: result.username, email: result.email });
+    res.send({
+      username: result.username,
+      email: result.email,
+      stockSymbols: result.stockSymbols,
+    });
   }
 
   @Post('logout')

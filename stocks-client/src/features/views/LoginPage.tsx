@@ -33,9 +33,11 @@ function LoginPage() {
     try {
       const parsed = LoginSchema.parse(formState)
       const data = await authService.login(parsed)
-      store.setMiniUser(data!)
+      if (data) {
+        store.setMiniUser({ email: data.email, username: data.username })
+        store.setUserStockSymbols(data.stockSymbols)
+      }
       navigate('/')
-      console.log(data)
     } catch (err) {
       if (err instanceof z.ZodError) {
         setError(err.errors[0].message)

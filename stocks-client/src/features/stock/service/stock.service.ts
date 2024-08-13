@@ -42,7 +42,7 @@ async function getStockBySymbol(symbol: string) {
 async function addStockToUserPortfolio(symbol: string) {
   try {
     const { data } = await axiosInstance
-      .post(`/stock/user/${symbol}`)
+      .post<{ stockSymbols: string[] }>(`/stock/user/${symbol}`)
       .catch((err) => {
         console.error(err)
         if (err instanceof AxiosError) throw err.response?.data!.message

@@ -6,6 +6,7 @@ import AllStocksPage from './features/views/AllStocksPage'
 import UserStockPage from './features/views/UserStockPage'
 import RegisterPageObserver from './features/views/RegisterPage'
 import LoginPageObserver from './features/views/LoginPage'
+import UserStockDetails from './features/views/UserStockDetails'
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
             <Route path="login" element={<LoginPageObserver />} />
             <Route path="register" element={<RegisterPageObserver />} />
           </Route>
-          <Route path="/portfolio" element={<UserStockPage />} />
+          <Route path="/portfolio/*" element={<UserStockPage />} />
+          <Route path="/portfolio/:symbol" element={<UserStockDetails />} />
           <Route path="/stocks" element={<AllStocksPage />} />
         </Routes>
       </BrowserRouter>

@@ -38,7 +38,10 @@ function RegisterPage() {
     try {
       const parsed = RegisterSchema.parse(formState)
       const data = await authService.register(parsed)
-      store.setMiniUser(data!)
+      if (data) {
+        store.setMiniUser({ email: data.email, username: data.username })
+        store.setUserStockSymbols(data.stockSymbols)
+      }
       navigate('/')
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -48,7 +51,6 @@ function RegisterPage() {
         setError(err.message)
         return
       }
-      console.log(formState)
     }
   }
 

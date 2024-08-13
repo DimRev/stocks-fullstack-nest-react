@@ -72,8 +72,7 @@ export class StockService {
 
   public async addStockToUserPortfolio(symbol: string, token: string) {
     // PROTECTED ROUTE - check if user is authenticated
-    const { email, username } =
-      await this.authService.getClaimsFromToken(token);
+    const { email } = await this.authService.getClaimsFromToken(token);
     try {
       const user = await this.userModel.findOne({ email });
       if (!user) {
@@ -87,7 +86,7 @@ export class StockService {
         throw new HttpException('no stocks added', 400);
       }
       await user.save();
-      return { username, email, stockSymbols: user.stockSymbols };
+      return { stockSymbols: user.stockSymbols };
     } catch (err) {
       console.error(err);
       if (err instanceof HttpException) throw err;
