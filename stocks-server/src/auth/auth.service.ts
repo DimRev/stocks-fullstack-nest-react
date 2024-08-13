@@ -15,19 +15,15 @@ export class AuthService {
     return jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
   }
 
-  public async getUserFromToken(token: string) {
+  public async getClaimsFromToken(token: string) {
     try {
       const claims = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload & {
         email: string;
         username: string;
       };
-      const user = await this.userModel.findOne({ email: claims.email });
-      if (!user) {
-        throw new Error('invalid token');
-      }
-      return user;
+      return claims;
     } catch (err) {
-      return new Error('invalid token');
+      throw new Error('invalid token');
     }
   }
 
@@ -43,7 +39,12 @@ export class AuthService {
     }
 
     const token = this.createToken(user.email, user.username);
-    return { username: user.username, email: user.email, token };
+    return {
+      username: user.username,
+      email: user.email,
+      stockSymbols: user.stockSymbols,
+      token,
+    };
   }
 
   public async register(email: string, username: string, password: string) {
@@ -53,11 +54,24 @@ export class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new this.userModel({ email, username, hashedPassword });
-    await newUser.save();
-
-    const token = this.createToken(newUser.email, newUser.username);
-    return { username: newUser.username, email: newUser.email, token };
+    const newUser = new this.userModel({
+      email,
+      username,
+      hashedPassword,
+      stockSymbols: [],
+    });
+    try {
+      const createdUser = await newUser.save();
+      const token = this.createToken(newUser.email, newUser.username);
+      return {
+        username: createdUser.username,
+        email: createdUser.email,
+        stockSymbols: createdUser.stockSymbols,
+        token,
+      };
+    } catch (err) {
+      throw new HttpException('failed to create user', 500);
+    }
   }
 
   public async logout() {

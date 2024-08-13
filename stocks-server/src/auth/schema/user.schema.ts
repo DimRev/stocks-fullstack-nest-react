@@ -15,4 +15,5 @@ export const UserSchema = new Schema<IUser>({
     type: String,
     required: true,
   },
+  stockSymbols: [String],
 });

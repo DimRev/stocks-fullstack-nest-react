@@ -1,8 +1,16 @@
 import { HttpException, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { AuthService } from 'src/auth/auth.service';
+import { IUser } from 'src/auth/interface/user.interface';
 import { axiosInstance, STOCK_API_KEY } from 'src/lib/axios';
 
 @Injectable()
 export class StockService {
+  constructor(
+    private readonly authService: AuthService,
+    @InjectModel('User') private readonly userModel: Model<IUser>,
+  ) {}
   public async getStocks() {
     try {
       const { data } = await axiosInstance.get<
@@ -18,11 +26,14 @@ export class StockService {
       return data.slice(0, 20);
     } catch (err) {
       console.error(err);
+      if (err instanceof HttpException) throw err;
       throw new HttpException('failed to get stocks', 500);
     }
   }
 
-  async getStockBySymbol(symbol: string) {
+  public async getStockBySymbol(symbol: string, token: string) {
+    // PROTECTED ROUTE - check if user is authenticated
+    await this.authService.getClaimsFromToken(token);
     try {
       const { data } = await axiosInstance.get<
         {
@@ -54,7 +65,33 @@ export class StockService {
       return data;
     } catch (err) {
       console.error(err);
+      if (err instanceof HttpException) throw err;
       throw new HttpException('failed to get stock', 500);
+    }
+  }
+
+  public async addStockToUserPortfolio(symbol: string, token: string) {
+    // PROTECTED ROUTE - check if user is authenticated
+    const { email, username } =
+      await this.authService.getClaimsFromToken(token);
+    try {
+      const user = await this.userModel.findOne({ email });
+      if (!user) {
+        throw new HttpException('user not found', 404);
+      }
+      if (user.stockSymbols.includes(symbol)) {
+        throw new HttpException('stock already added', 400);
+      }
+      user.stockSymbols.push(symbol);
+      if (!user.stockSymbols.length) {
+        throw new HttpException('no stocks added', 400);
+      }
+      await user.save();
+      return { username, email, stockSymbols: user.stockSymbols };
+    } catch (err) {
+      console.error(err);
+      if (err instanceof HttpException) throw err;
+      throw new HttpException('failed to add stock to user portfolio', 500);
     }
   }
 }

@@ -1,8 +1,12 @@
 type Props = {
   stockItem: StockListItem
+  handleStockItemClick: (symbol: string) => void
 }
 
-function StockListItem({ stockItem }: Props) {
+function StockListItem({ stockItem, handleStockItemClick }: Props) {
+  function handleClick() {
+    handleStockItemClick(stockItem.symbol)
+  }
   return (
     <div className="px-2 py-4 border">
       <div className="flex items-center gap-2 border-b truncate">
@@ -17,7 +21,7 @@ function StockListItem({ stockItem }: Props) {
         <p className="px-2 py-1 border">{stockItem.symbol}</p>
         <p className="px-2 py-1 border">{stockItem.type}</p>
       </div>
-      <button>Add to portfolio</button>
+      <button onClick={handleClick}>Add to portfolio</button>
     </div>
   )
 }

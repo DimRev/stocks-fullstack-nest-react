@@ -9,10 +9,18 @@ function StockList() {
   ) {
     store.getStocks()
   }
+
+  function handleStockItemClick(symbol: string) {
+    store.addStockToUserPortfolio(symbol)
+  }
   return (
     <div className="gap-x-2 gap-y-1 grid grid-cols-3">
       {store.stocks.map((stockItem, idx) => (
-        <StockListItem key={stockItem.symbol + idx} stockItem={stockItem} />
+        <StockListItem
+          key={stockItem.symbol + idx}
+          stockItem={stockItem}
+          handleStockItemClick={handleStockItemClick}
+        />
       ))}
     </div>
   )

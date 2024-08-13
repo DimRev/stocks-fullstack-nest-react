@@ -31,6 +31,14 @@ class Store {
       }
     })
   }
+
+  public async addStockToUserPortfolio(symbol: string) {
+    stockService.addStockToUserPortfolio(symbol).then((data) => {
+      if (data) {
+        console.log(data)
+      }
+    })
+  }
 }
 
 const store = new Store()
