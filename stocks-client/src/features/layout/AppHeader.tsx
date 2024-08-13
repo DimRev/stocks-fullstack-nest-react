@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import UserLoginButton from '../auth/components/UserLoginButton'
 
 function AppHeader() {
   return (
@@ -6,8 +7,9 @@ function AppHeader() {
       <Link to="/">
         <div>Stocks</div>
       </Link>
-      <nav>
+      <nav className="flex gap-4">
         <Link to="/">Home</Link>
+        <UserLoginButton />
       </nav>
     </header>
   )
