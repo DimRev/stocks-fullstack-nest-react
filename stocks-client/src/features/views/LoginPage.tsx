@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import { authService } from '../auth/services/auth.service'
 
 const LoginSchema = z.object({
   email: z.string().email('Invalid email'),
@@ -15,6 +16,7 @@ function LoginPage() {
     password: '',
   })
   const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target
@@ -24,18 +26,22 @@ function LoginPage() {
     }))
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     try {
       const parsed = LoginSchema.parse(formState)
-      console.log(parsed)
+      const data = await authService.login(parsed)
+      navigate('/home')
+      console.log(data)
     } catch (err) {
       if (err instanceof z.ZodError) {
         setError(err.errors[0].message)
         return
+      } else if (err instanceof Error) {
+        setError(err.message)
+        return
       }
     }
-    console.log(formState)
   }
 
   return (

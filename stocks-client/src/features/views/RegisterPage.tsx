@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { authService } from '../auth/services/auth.service'
 
@@ -21,6 +21,8 @@ function RegisterPage() {
   })
   const [error, setError] = useState('')
 
+  const navigate = useNavigate()
+
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target
     setFormState((prevState) => ({
@@ -34,6 +36,7 @@ function RegisterPage() {
     try {
       const parsed = RegisterSchema.parse(formState)
       const data = await authService.register(parsed)
+      navigate('/home')
       console.log(data)
     } catch (err) {
       if (err instanceof z.ZodError) {
