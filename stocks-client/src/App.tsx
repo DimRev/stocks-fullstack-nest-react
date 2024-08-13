@@ -2,10 +2,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import HomePage from './features/views/HomePage'
 import AppHeader from './features/layout/AppHeader'
 import AuthLayout from './features/views/AuthLayout'
-import LoginPage from './features/views/LoginPage'
-import RegisterPage from './features/views/RegisterPage'
 import AllStocksPage from './features/views/AllStocksPage'
 import UserStockPage from './features/views/UserStockPage'
+import RegisterPageObserver from './features/views/RegisterPage'
+import LoginPageObserver from './features/views/LoginPage'
 
 function App() {
   return (
@@ -15,8 +15,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/auth" element={<AuthLayout />}>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
+            <Route path="login" element={<LoginPageObserver />} />
+            <Route path="register" element={<RegisterPageObserver />} />
           </Route>
           <Route path="/portfolio" element={<UserStockPage />} />
           <Route path="/stocks" element={<AllStocksPage />} />

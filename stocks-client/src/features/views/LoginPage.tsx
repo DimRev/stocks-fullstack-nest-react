@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { authService } from '../auth/services/auth.service'
+import { observer } from 'mobx-react'
+import store from '../../lib/store'
 
 const LoginSchema = z.object({
   email: z.string().email('Invalid email'),
@@ -31,7 +33,8 @@ function LoginPage() {
     try {
       const parsed = LoginSchema.parse(formState)
       const data = await authService.login(parsed)
-      navigate('/home')
+      store.setMiniUser(data!)
+      navigate('/')
       console.log(data)
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -86,4 +89,5 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+const LoginPageObserver = observer(LoginPage)
+export default LoginPageObserver
