@@ -9,6 +9,8 @@ function AppHeader() {
       </Link>
       <nav className="flex gap-4">
         <Link to="/">Home</Link>
+        <Link to="/portfolio">Portfolio</Link>
+        <Link to="/stocks">Stocks</Link>
         <UserLoginButton />
       </nav>
     </header>

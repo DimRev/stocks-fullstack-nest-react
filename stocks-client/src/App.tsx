@@ -4,6 +4,8 @@ import AppHeader from './features/layout/AppHeader'
 import AuthLayout from './features/views/AuthLayout'
 import LoginPage from './features/views/LoginPage'
 import RegisterPage from './features/views/RegisterPage'
+import AllStocksPage from './features/views/AllStocksPage'
+import UserStockPage from './features/views/UserStockPage'
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
           </Route>
+          <Route path="/portfolio" element={<UserStockPage />} />
+          <Route path="/stocks" element={<AllStocksPage />} />
         </Routes>
       </BrowserRouter>
     </div>
