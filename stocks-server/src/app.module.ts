@@ -1,16 +1,13 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { StockModule } from './stock/stock.module';
 import { AuthModule } from './auth/auth.module';
-import { MongooseModule } from '@nestjs/mongoose';
+import { MONGO_DB_URI } from './lib/mongo';
+import { StockModule } from './stock/stock.module';
 
 @Module({
-  imports: [
-    StockModule,
-    AuthModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/stocks'),
-  ],
+  imports: [StockModule, AuthModule, MongooseModule.forRoot(MONGO_DB_URI)],
   controllers: [AppController],
   providers: [AppService],
 })
