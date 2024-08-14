@@ -4,15 +4,24 @@ import { Model } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
 import { IUser } from 'src/auth/interface/user.interface';
 import { axiosInstance, STOCK_API_KEY } from 'src/lib/axios';
+import { IStocks } from './interface/stocks.interface';
 
 @Injectable()
 export class StockService {
   constructor(
     private readonly authService: AuthService,
     @InjectModel('User') private readonly userModel: Model<IUser>,
+    @InjectModel('Stocks') private readonly stockModel: Model<IStocks>,
   ) {}
   public async getStocks() {
     try {
+      const stocks = await this.stockModel.findOne({
+        timestamp: { $gt: Date.now() - 1000 * 60 * 10 },
+      });
+      if (stocks) {
+        console.log('hit cache');
+        return stocks.stocks.slice(0, 20);
+      }
       const { data } = await axiosInstance.get<
         {
           symbol: string;
@@ -23,7 +32,13 @@ export class StockService {
           type: string;
         }[]
       >('/v3/stock/list' + `?apikey=${STOCK_API_KEY}`);
-      return data.slice(0, 20);
+      const newStocks = {
+        stocks: data.slice(0, 20),
+        timestamp: Date.now(),
+      };
+      await this.stockModel.create(newStocks);
+      console.log('update cache');
+      return newStocks.stocks.slice(0, 20);
     } catch (err) {
       console.error(err);
       if (err instanceof HttpException) throw err;

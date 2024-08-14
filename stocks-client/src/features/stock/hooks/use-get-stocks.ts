@@ -1,10 +1,14 @@
 import { useQuery } from 'react-query'
 import { axiosInstance } from '~/lib/axios'
 
-export function useGetStocks() {
+type GetStocksParams = {
+  page: number
+}
+
+export function useGetStocks({ page }: GetStocksParams) {
   return useQuery<StockListItem[], Error>({
-    queryKey: ['stocks'],
-    queryFn: getStocks,
+    queryKey: ['stocks', page],
+    queryFn: () => getStocks({ page }),
     onSuccess: (res) => {
       console.log('Successfully fetched stocks:', res)
     },
@@ -13,9 +17,11 @@ export function useGetStocks() {
   })
 }
 
-async function getStocks() {
+async function getStocks({ page }: GetStocksParams) {
   try {
-    const { data } = await axiosInstance.get<StockListItem[]>('/stock')
+    const { data } = await axiosInstance.get<StockListItem[]>(
+      `/stock?page=${page}`,
+    )
     return data
   } catch (err) {
     console.error(err)

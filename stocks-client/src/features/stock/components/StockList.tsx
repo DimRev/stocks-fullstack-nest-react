@@ -7,7 +7,8 @@ import { useAddStockToUserPortfolio } from '../hooks/use-add-stock-to-user-portf
 
 function StockList() {
   const [pendingStocks, setPendingStocks] = useState<string[]>([])
-  const { data: stocks, isLoading: isLoadingStocks } = useGetStocks()
+  const [page, setPage] = useState(0)
+  const { data: stocks, isLoading: isLoadingStocks } = useGetStocks({ page })
   const { mutateAsync: addStockToUserPortfolio, isLoading: isAddingStock } =
     useAddStockToUserPortfolio()
 
@@ -123,8 +124,13 @@ function StockList() {
   return (
     <Table
       loading={isLoadingStocks}
-      dataSource={store.stocks}
+      dataSource={stocks}
       columns={columns}
+      pagination={{
+        onChange: (page) => {
+          setPage(page - 1)
+        },
+      }}
     />
   )
 }
