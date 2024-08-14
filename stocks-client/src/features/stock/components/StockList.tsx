@@ -1,20 +1,15 @@
 import { Button, Table } from 'antd'
 import { observer } from 'mobx-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import store from '../../../lib/store'
+import { useGetStocks } from '../hooks/use-get-stocks'
 
 function StockList() {
-  const [isLoading, setIsLoading] = useState(false)
+  const { data: stocks, isLoading: isLoadingStocks } = useGetStocks()
 
   useEffect(() => {
-    loadStocks()
-  }, [])
-
-  async function loadStocks() {
-    setIsLoading(true)
-    await store.getStocks()
-    setIsLoading(false)
-  }
+    store.getStocks(stocks)
+  }, [stocks])
 
   function handleStockItemClick(symbol: string) {
     store.addStockToUserPortfolio(symbol)
@@ -106,11 +101,15 @@ function StockList() {
       },
     ]
   }, [store.userStockSymbols, store.miniUser])
-  if (!isLoading && store.stocks === null) {
+  if (!isLoadingStocks && !stocks) {
     return <div>Error loading stocks</div>
   }
   return (
-    <Table loading={isLoading} dataSource={store.stocks} columns={columns} />
+    <Table
+      loading={isLoadingStocks}
+      dataSource={store.stocks}
+      columns={columns}
+    />
   )
 }
 

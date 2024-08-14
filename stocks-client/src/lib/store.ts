@@ -25,20 +25,13 @@ class Store {
     this.miniUser = null
   }
 
-  public async getStocks() {
-    if (
-      this.lastFetchedStocks &&
-      Date.now() - this.lastFetchedStocks < 1000 * 60 * 10
-    ) {
-      return
+  public async getStocks(stocks?: StockListItem[]) {
+    if (stocks) {
+      this.stocks = stocks
+      this.lastFetchedStocks = Date.now()
+    } else {
+      this.stocks = []
     }
-
-    stockService.getStocks().then((data) => {
-      if (data) {
-        this.stocks = data
-        this.lastFetchedStocks = Date.now()
-      }
-    })
   }
 
   public setUserStockSymbols(userStockSymbols: string[]) {
