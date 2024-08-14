@@ -1,11 +1,28 @@
+import { useQuery } from 'react-query'
 import { axiosInstance } from '~/lib/axios'
-
-function useGetStocksBySymbol() {}
 
 type GetStockBySymbolParams = {
   symbol: string
 }
 
+export function useGetStocksBySymbol({ symbol }: GetStockBySymbolParams) {
+  return useQuery<StockDetails, Error>({
+    queryKey: ['stocks'],
+    queryFn: () => getStocksBySymbol({ symbol }),
+    onSuccess: (res) => {
+      console.log('Successfully fetched stocks:', res)
+    },
+    cacheTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 10, // 10 minutes
+  })
+}
+
 async function getStocksBySymbol({ symbol }: GetStockBySymbolParams) {
-  return axiosInstance.get<StockDetails>(`/stock/${symbol}`)
+  try {
+    const { data } = await axiosInstance.get<StockDetails>(`/stock/${symbol}`)
+    return data
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
 }

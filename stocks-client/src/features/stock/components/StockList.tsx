@@ -1,18 +1,33 @@
 import { Button, Table } from 'antd'
 import { observer } from 'mobx-react'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import store from '../../../lib/store'
 import { useGetStocks } from '../hooks/use-get-stocks'
+import { useAddStockToUserPortfolio } from '../hooks/use-add-stock-to-user-portfolio'
 
 function StockList() {
+  const [pendingStocks, setPendingStocks] = useState<string[]>([])
   const { data: stocks, isLoading: isLoadingStocks } = useGetStocks()
+  const { mutateAsync: addStockToUserPortfolio, isLoading: isAddingStock } =
+    useAddStockToUserPortfolio()
 
   useEffect(() => {
     store.getStocks(stocks)
   }, [stocks])
 
   function handleStockItemClick(symbol: string) {
-    store.addStockToUserPortfolio(symbol)
+    setPendingStocks((prev) => [...prev, symbol])
+    addStockToUserPortfolio(
+      { symbol },
+      {
+        onSuccess: (data) => {
+          store.setUserStockSymbols(data.stockSymbols)
+        },
+        onSettled: () => {
+          setPendingStocks((prev) => prev.filter((s) => s !== symbol))
+        },
+      },
+    )
   }
 
   const columns = useMemo(() => {
@@ -92,6 +107,7 @@ function StockList() {
             <div onClick={() => handleStockItemClick(record.symbol)}>
               <Button
                 type="primary"
+                loading={isAddingStock && pendingStocks.includes(record.symbol)}
                 disabled={store.userStockSymbols.includes(record.symbol)}>
                 Add
               </Button>

@@ -33,6 +33,7 @@ export class StockService {
 
   public async getStockBySymbol(symbol: string, token: string) {
     // PROTECTED ROUTE - check if user is authenticated
+    console.log('token', token);
     await this.authService.getClaimsFromToken(token);
     try {
       const { data } = await axiosInstance.get<

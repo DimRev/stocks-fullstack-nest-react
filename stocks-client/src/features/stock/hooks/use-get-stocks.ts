@@ -8,9 +8,17 @@ export function useGetStocks() {
     onSuccess: (res) => {
       console.log('Successfully fetched stocks:', res)
     },
+    cacheTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 10, // 10 minutes
   })
 }
 
-function getStocks() {
-  return axiosInstance.get<StockListItem[]>('/stock').then((res) => res.data)
+async function getStocks() {
+  try {
+    const { data } = await axiosInstance.get<StockListItem[]>('/stock')
+    return data
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
 }
