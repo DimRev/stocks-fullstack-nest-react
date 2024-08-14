@@ -1,5 +1,7 @@
 import { observer } from 'mobx-react'
 import { useGetStocksBySymbol } from '../hooks/use-get-stocks-by-symbol'
+import { Card, Col, Row, Typography } from 'antd'
+import Title from 'antd/es/typography/Title'
 
 type Props = {
   symbol: string
@@ -9,37 +11,76 @@ function StockDetails({ symbol }: Props) {
   const { data: stockDetails, isLoading: isLoadingStockDetails } =
     useGetStocksBySymbol({ symbol })
 
-  console.log('stockDetails', stockDetails)
-
   if (isLoadingStockDetails) return <div>Loading...</div>
   if (!stockDetails) return <div>No stock details found</div>
   return (
-    <h2>test</h2>
-    // <div>
-    //   <h2>
-    //     {stockDetails.name} ({stockDetails.symbol})
-    //   </h2>
-    //   <p>Price: ${stockDetails.price.toFixed(2)}</p>
-    //   <p>Day Low: ${stockDetails.dayLow.toFixed(2)}</p>
-    //   <p>Day High: ${stockDetails.dayHigh.toFixed(2)}</p>
-    //   <p>Year Low: ${stockDetails.yearLow.toFixed(2)}</p>
-    //   <p>Year High: ${stockDetails.yearHigh.toFixed(2)}</p>
-    //   <p>Market Cap: ${stockDetails.marketCap.toLocaleString()}</p>
-    //   <p>PE Ratio: {stockDetails.peRatio}</p>
-    //   <p>Exchange: {stockDetails.exchange}</p>
-    //   <p>Volume: {stockDetails.volume.toLocaleString()}</p>
-    //   <p>Average Volume: {stockDetails.avgVolume.toLocaleString()}</p>
-    //   <p>Open: ${stockDetails.open.toFixed(2)}</p>
-    //   <p>Previous Close: ${stockDetails.previousClose.toFixed(2)}</p>
-    //   <p>EPS: ${stockDetails.eps.toFixed(2)}</p>
-    //   <p>
-    //     Earnings Announcement:{' '}
-    //     {new Date(stockDetails.earningsAnnouncement).toLocaleDateString()}
-    //   </p>
-    //   <p>
-    //     Shares Outstanding: {stockDetails.sharesOutstanding.toLocaleString()}
-    //   </p>
-    // </div>
+    <Card>
+      <Title level={2}>
+        {stockDetails.name} ({stockDetails.symbol})
+      </Title>
+      <Row gutter={[16, 16]}>
+        <Col span={12}>
+          <Typography.Text strong>Price:</Typography.Text> $
+          {stockDetails.price.toFixed(2)}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Day Low:</Typography.Text> $
+          {stockDetails.dayLow.toFixed(2)}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Day High:</Typography.Text> $
+          {stockDetails.dayHigh.toFixed(2)}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Year Low:</Typography.Text> $
+          {stockDetails.yearLow.toFixed(2)}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Year High:</Typography.Text> $
+          {stockDetails.yearHigh.toFixed(2)}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Market Cap:</Typography.Text> $
+          {stockDetails.marketCap.toLocaleString()}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>PE Ratio:</Typography.Text>{' '}
+          {stockDetails.peRatio}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Exchange:</Typography.Text>{' '}
+          {stockDetails.exchange}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Volume:</Typography.Text>{' '}
+          {stockDetails.volume.toLocaleString()}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Average Volume:</Typography.Text>{' '}
+          {stockDetails.avgVolume.toLocaleString()}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Open:</Typography.Text> $
+          {stockDetails.open.toFixed(2)}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Previous Close:</Typography.Text> $
+          {stockDetails.previousClose.toFixed(2)}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>EPS:</Typography.Text> $
+          {stockDetails.eps.toFixed(2)}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Earnings Announcement:</Typography.Text>{' '}
+          {new Date(stockDetails.earningsAnnouncement).toLocaleDateString()}
+        </Col>
+        <Col span={12}>
+          <Typography.Text strong>Shares Outstanding:</Typography.Text>{' '}
+          {stockDetails.sharesOutstanding.toLocaleString()}
+        </Col>
+      </Row>
+    </Card>
   )
 }
 

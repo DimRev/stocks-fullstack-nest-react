@@ -7,7 +7,7 @@ type GetStockBySymbolParams = {
 
 export function useGetStocksBySymbol({ symbol }: GetStockBySymbolParams) {
   return useQuery<StockDetails, Error>({
-    queryKey: ['stocks'],
+    queryKey: ['details', symbol],
     queryFn: () => getStocksBySymbol({ symbol }),
     onSuccess: (res) => {
       console.log('Successfully fetched stocks:', res)
@@ -19,7 +19,9 @@ export function useGetStocksBySymbol({ symbol }: GetStockBySymbolParams) {
 
 async function getStocksBySymbol({ symbol }: GetStockBySymbolParams) {
   try {
-    const { data } = await axiosInstance.get<StockDetails>(`/stock/${symbol}`)
+    const { data } = await axiosInstance.get<StockDetails>(
+      `/stock/user/${symbol}`,
+    )
     return data
   } catch (err) {
     console.error(err)

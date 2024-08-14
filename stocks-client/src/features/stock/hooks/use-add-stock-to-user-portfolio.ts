@@ -19,6 +19,10 @@ async function addStockToUserPortfolio({
   try {
     const { data } = await axiosInstance.post<{ stockSymbols: string[] }>(
       `/stock/user/${symbol}`,
+      {},
+      {
+        withCredentials: true,
+      },
     )
     return data
   } catch (err) {
