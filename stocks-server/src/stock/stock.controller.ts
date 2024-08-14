@@ -38,7 +38,7 @@ export class StockController {
     return this.stockService.addStockToUserPortfolio(symbol, token);
   }
 
-  @Get(':symbol')
+  @Get('user/:symbol')
   getStockDetails(@Param('symbol') symbol: string, @Req() request: any) {
     const token = request.cookies?.jwt;
     if (!token) {
